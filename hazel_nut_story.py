@@ -30,29 +30,29 @@ def create_combined_image(image1_path, image2_path, output_path):
     final_image.save(output_path)
     return output_path
 
-# Define the date for which the schedule images are to be combined
-today_date = '2024-07-24'
+# # Define the date for which the schedule images are to be combined
+# today_date = '2025-02-23'
 
-input_image_path1 = './action_schedule/what-{today_date}.jpeg'.format(today_date=today_date)
-input_image_path2 = './time_schedule/when-{today_date}.jpeg'.format(today_date=today_date)
+# input_image_path1 = './action_schedule/what-{today_date}.jpeg'.format(today_date=today_date)
+# input_image_path2 = './time_schedule/when-{today_date}.jpeg'.format(today_date=today_date)
 
-# Define paths for input and output
-output_image_path = './remade_schedule/story-{today_date}.jpeg'.format(today_date=today_date)
+# # Define paths for input and output
+# output_image_path = './remade_schedule/story-{today_date}.jpeg'.format(today_date=today_date)
 
-# Create the combined image with the specified inputs and layout
-create_combined_image(input_image_path1, input_image_path2, output_image_path)
+# # Create the combined image with the specified inputs and layout
+# create_combined_image(input_image_path1, input_image_path2, output_image_path)
 
-# # Create combined images for a range of dates
-# date_range = pd.date_range(start='2024-07-24', end='2024-08-12')
+# Create combined images for a range of dates
+date_range = pd.date_range(start='2025-03-16', end='2025-03-29')
 
-# for date in date_range:
-#     today_date = date.strftime('%Y-%m-%d')  # Format date as 'YYYY-MM-DD'
+for date in date_range:
+    today_date = date.strftime('%Y-%m-%d')  # Format date as 'YYYY-MM-DD'
 
-#     input_image_path1 = './action_schedule/what-{today_date}.jpeg'.format(today_date=today_date)
-#     input_image_path2 = './time_schedule/when-{today_date}.jpeg'.format(today_date=today_date)
+    input_image_path1 = './action_schedule/what-{today_date}.jpeg'.format(today_date=today_date)
+    input_image_path2 = './time_schedule/when-{today_date}.jpeg'.format(today_date=today_date)
 
-#     # Define paths for input and output
-#     output_image_path = './remade_schedule/story-{today_date}.jpeg'.format(today_date=today_date)
+    # Define paths for input and output
+    output_image_path = './remade_schedule/story-{today_date}.jpeg'.format(today_date=today_date)
 
-#     # Create the combined image with the specified inputs and layout
-#     create_combined_image(input_image_path1, input_image_path2, output_image_path)
+    # Create the combined image with the specified inputs and layout
+    create_combined_image(input_image_path1, input_image_path2, output_image_path)

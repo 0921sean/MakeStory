@@ -2,17 +2,18 @@ import os
 
 # Data of people and their respective workout counts in the format (completed/total)
 people_workout_counts = {
-    '권정호': 1,
-    '김세호': 3,
+    '권정호': 2,
+    # '김세호': ,
     '김현빈': 3,
-    '성현우': 0,
-    '신동훈': 3,
-    '이명건': 2,
-    '이승준': -1,
-    '이준성': 4,
+    '성현우': 2,
+    '신동훈': 2,
+    '이명건': 4,
+    '이승준': 3,
+    '이준성': 6,
+    '이형민': 3,
     '전은결': 3,
-    '천승범': 0,
-    '황동근': 3
+    '천승범': 2,
+    '황동근': 4
 }
 
 # Initialize the penalty system
@@ -62,13 +63,42 @@ for fine in [5000, 10000, 15000]:
 penalty_output = "벌금 " + " ".join(penalty_text)
 print(penalty_output)
 
-# Define the file that will store the total penalty
-penalty_file = "total_penalty.txt"
+# Manage individual penalties in penalty_list.txt
+penalty_file = "penalty_list.txt"
+penalty_totals = {}
 
 # Check if the file exists
 if os.path.exists(penalty_file):
-    # Read the current total penalty from the file
+    # Read the current penalties from the file
     with open(penalty_file, "r") as file:
+        for line in file:
+            person, amount = line.strip().split(': ')
+            penalty_totals[person] = int(amount.replace(',', '').replace('원', ''))
+else:
+    # Initialize an empty dictionary if the file doesn't exist
+    penalty_totals = {}
+
+# Update the individual penalties
+for person, fine in penalties.items():
+    if fine > 0:
+        if person in penalty_totals:
+            penalty_totals[person] += fine
+        else:
+            penalty_totals[person] = fine
+
+# Write the updated totals back to penalty_list.txt
+with open(penalty_file, "w") as file:
+    for person, total_fine in penalty_totals.items():
+        formatted_fine = f"{total_fine:,}원"
+        file.write(f"{person}: {formatted_fine}\n")
+
+# Define the file that will store the total penalty
+total_penalty_file = "total_penalty.txt"
+
+# Check if the file exists
+if os.path.exists(total_penalty_file):
+    # Read the current total penalty from the file
+    with open(total_penalty_file, "r") as file:
         total_penalty = int(file.read().strip())
 else:
     # Initialize total_penalty if the file doesn't exist
@@ -81,7 +111,7 @@ current_total_penalty = sum([fine * len(penalty_groups[fine]) for fine in penalt
 total_penalty += current_total_penalty
 
 # Save the updated total penalty back to the file
-with open(penalty_file, "w") as file:
+with open(total_penalty_file, "w") as file:
     file.write(str(total_penalty))
 
 # Format the total penalty as a number with commas for thousands
