@@ -43,7 +43,7 @@ def create_combined_image(image1_path, image2_path, output_path):
 # create_combined_image(input_image_path1, input_image_path2, output_image_path)
 
 # Create combined images for a range of dates
-date_range = pd.date_range(start='2025-03-16', end='2025-03-29')
+date_range = pd.date_range(start='2025-03-30', end='2025-04-06')
 
 for date in date_range:
     today_date = date.strftime('%Y-%m-%d')  # Format date as 'YYYY-MM-DD'

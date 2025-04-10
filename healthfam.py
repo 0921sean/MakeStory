@@ -2,18 +2,18 @@ import os
 
 # Data of people and their respective workout counts in the format (completed/total)
 people_workout_counts = {
-    '권정호': 2,
+    '권정호': 1,
     # '김세호': ,
     '김현빈': 3,
-    '성현우': 2,
+    '성현우': 1,
     '신동훈': 2,
-    '이명건': 4,
+    '이명건': 1,
     '이승준': 3,
-    '이준성': 6,
-    '이형민': 3,
+    '이준성': 3,
+    '이형민': 1,
     '전은결': 3,
     '천승범': 2,
-    '황동근': 4
+    '황동근': 3
 }
 
 # Initialize the penalty system
