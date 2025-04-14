@@ -2,17 +2,17 @@ import os
 
 # Data of people and their respective workout counts in the format (completed/total)
 people_workout_counts = {
-    '권정호': 1,
+    '권정호': 2,
     # '김세호': ,
-    '김현빈': 3,
-    '성현우': 1,
-    '신동훈': 2,
-    '이명건': 1,
+    '김현빈': 2,
+    '성현우': 3,
+    '신동훈': 3,
+    '이명건': 0,
     '이승준': 3,
     '이준성': 3,
-    '이형민': 1,
+    '이형민': 3,
     '전은결': 3,
-    '천승범': 2,
+    '천승범': 0,
     '황동근': 3
 }
 
