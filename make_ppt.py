@@ -4,7 +4,7 @@ from pptx.util import Inches
 from PIL import Image
 
 # 원하는 주차 리스트
-target_weeks = [2, 3]
+target_weeks = [4, 5, 6]
 
 # 이미지 폴더 경로
 base_folder = "ppt_pictures"
