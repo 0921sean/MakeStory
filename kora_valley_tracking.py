@@ -5,8 +5,8 @@ from datetime import datetime
 from openpyxl.styles import Alignment
 
 # 파일 경로
-excel_path = './../KorA_Valley/코라밸리 기록.xlsx'  # 수정
-output_path = './../KorA_Valley/KorA_Valley_기록.xlsx'
+excel_path = './../KorA_Valley/KorA_Valley_tracking.xlsx'  # 수정
+output_path = './../KorA_Valley/KorA_Valley_tracking.xlsx'
 
 # 사람 이름 목록
 names = ["천승범", "조예찬 John", "최재훈", "송의현", "이승준", "양수민", "신재욱", "이승헌", "진세", "서희찬", "신영진", "윤상민"]
@@ -37,13 +37,13 @@ else:
     print("'계획' 시트를 찾을 수 없습니다. 첫 번째 시트를 사용합니다.")
     plan_sheet = wb.active
 
-# # 각 사람별 시트 찾기 및 매핑
-# name_sheets = {}
-# for name, sheet_name in name_to_sheet.items():
-#     if sheet_name in wb.sheetnames:
-#         name_sheets[name] = wb[sheet_name]
-#     else:
-#         print(f"'{sheet_name}' 시트를 찾을 수 없습니다. 해당 사람의 계획 내용은 기록되지 않습니다: {name}")
+# 각 사람별 시트 찾기 및 매핑
+name_sheets = {}
+for name, sheet_name in name_to_sheet.items():
+    if sheet_name in wb.sheetnames:
+        name_sheets[name] = wb[sheet_name]
+    else:
+        print(f"'{sheet_name}' 시트를 찾을 수 없습니다. 해당 사람의 계획 내용은 기록되지 않습니다: {name}")
 
 # 입력 텍스트 읽기
 with open('tracking.txt', 'r', encoding='utf-8') as f:
@@ -97,11 +97,11 @@ for line in lines:
             cell.alignment = Alignment(horizontal="center")
             cell.number_format = '@'
         
-        # # 해당 이름의 시트가 있다면 계획 내용 기록 - 3번째 열에 기록
-        # if name in name_sheets and plan_content:  # 계획 내용이 있는 경우에만 기록
-        #     cell = name_sheets[name].cell(row=row, column=3, value=plan_content)  # 3번째 열로 수정
-        #     # 계획 페이지를 제외한 다른 페이지는 빨간색 글씨 사용 안 함
-        #     cell.alignment = Alignment(horizontal="left")
+        # 해당 이름의 시트가 있다면 계획 내용 기록 - 3번째 열에 기록
+        if name in name_sheets and plan_content:  # 계획 내용이 있는 경우에만 기록
+            cell = name_sheets[name].cell(row=row, column=3, value=plan_content)  # 3번째 열로 수정
+            # 계획 페이지를 제외한 다른 페이지는 빨간색 글씨 사용 안 함
+            cell.alignment = Alignment(horizontal="left")
 
     # 완료 처리
     if '✅' in content:
