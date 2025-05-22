@@ -211,7 +211,22 @@ for i, (plan_name, time_ranges) in enumerate(plan_dict.items()):
             
             current_min = segment_end_min
 
-# 💾 저장
-output_path = "./planner_with_date.jpeg"
+# 💾 저장 (월별 폴더에 날짜별 파일명으로)
+import os
+
+# 날짜에서 연-월 추출
+if match:
+    year, month, day = match.groups()
+    # 폴더 경로 생성
+    folder_path = f"remade_schedule/{year}-{month.zfill(2)}"
+    os.makedirs(folder_path, exist_ok=True)
+    
+    # 파일명 생성
+    filename = f"story-{year}-{month.zfill(2)}-{day.zfill(2)}.jpeg"
+    output_path = os.path.join(folder_path, filename)
+else:
+    # 날짜 파싱 실패시 기본 경로
+    output_path = "./planner_with_date.jpeg"
+
 image.save(output_path)
-print("✅ 플래너 저장 완료:", output_path)
+print(f"✅ 플래너 저장 완료: {output_path}")
