@@ -10,23 +10,12 @@ draw = ImageDraw.Draw(image)
 
 # 2. 텍스트 입력
 text_input = """
-2025년 5월 13일 화요일
-오전 1:00 천승범 독서 010 200
-오전 3:00 천승범 JP Assignment 320 440
-오전 9:16 천승범 독서 910 950
-오전 9:58 천승범 유익한 영상 600 910
-오전 9:58 천승범 유익한 영상 950 1000
-오후 1:45 천승범 컴구 수업 1000 1140
-오전 11:58 천승범 코라밸리 운영 1140 1220
-오후 1:45 천승범 전전101 채점 1340 1440
-오후 3:10 천승범 전전101 채점 1500 1550
-오후 4:28 천승범 물전 공부 1550 1600
-오후 5:45 천승범 전전101 채점 1600 1750
-오후 6:05 천승범 LinkedIn 수정 1750 1810
-오후 6:54 천승범 데구 강의 1810 1920
-오후 7:46 천승범 BD Assignment 1920 2100
-오후 11:08 천승범 BD Meeting 2100 2240
-오후 11:08 천승범 언어 공부 2240 2310
+2025년 5월 23일 금요일
+오전 4:36 천승범 스토리 제작 430 700
+오후 5:59 천승범 유익한 영상 1520 1730
+오후 7:01 천승범 헬스 1800 1900
+오후 8:49 천승범 중문이 과제 2040 2120
+오후 9:00 천승범 언어 공부 2200 2220
 """
 
 # 📆 날짜 추출 및 표시
@@ -70,25 +59,46 @@ def time_to_minutes(hour, minute):
 
 # ✅ 우선순위 설정 (수동으로 지정)
 priority_order = [
+    "물전 중간",
+    "중문이 중간",
+    "고문상 중간",
+    "고문상 퀴즈",
     "컴구 수업",
+    "데구 수업",
+    "전전101 조교",
+    "중문이 과제",
     "데구 강의",
+    "컴구 공부",
     "물전 공부",
+    "중문이 공부",
+    "고문상 공부",
     "전전101 채점",
     "독서",
     "헬스",
     "언어 공부",
     "유익한 영상",
+    "CS 공부",
     "BD Assignment",
     "JP Assignment",
+    "GTC Assignment",
+    "글쓰기",
+    "기록/정산 자동화",
+    "플래너 제작",
+    "친구글 읽기",
     "LinkedIn 수정",
     "코라밸리 운영",
-    "BD Meeting"
+    "코라밸리/헬스팸 운영",
+    "플래너 작성",
+    "BD Meeting",
+    "GQ Meeting",
+    "토크",
+    "GTC 이메일 전송",
 ]
 
 def get_plan_priority(plan_name):
     """계획명의 우선순위를 반환 (낮을수록 높은 우선순위)"""
     for i, priority_plan in enumerate(priority_order):
-        if priority_plan in plan_name:
+        if priority_plan == plan_name:
             return i + 1
     return 999  # 우선순위에 없는 계획은 맨 뒤로
 
@@ -162,7 +172,9 @@ def draw_rounded_block(x1, y1, x2, y2, color):
 
 # 8. 계획 막대 그리기 (줄마다 정확한 시작 칸과 길이 계산)
 for i, (plan_name, time_ranges) in enumerate(plan_dict.items()):
-    color = colors[i % len(colors)]
+    plan_priority_index = next(j for j, p in enumerate(unique_plans) if p == plan_name)
+    color = colors[plan_priority_index % len(colors)]
+    print(f"계획: {plan_name} → 색깔 인덱스: {plan_priority_index} → 색깔: {color}")
     for start_total_min, end_total_min in time_ranges:
         current_min = start_total_min
         print(f"  시간대: {current_min//60}:{current_min%60:02d} ~ {end_total_min//60}:{end_total_min%60:02d}")
