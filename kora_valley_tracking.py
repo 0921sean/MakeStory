@@ -6,10 +6,10 @@ from openpyxl.styles import Alignment
 
 # 파일 경로
 excel_path = './../KorA_Valley/KorA_Valley_tracking.xlsx'  # 수정
-output_path = './../KorA_Valley/KorA_Valley_tracking_fixed.xlsx'
+output_path = './../KorA_Valley/KorA_Valley_tracking_06_08.xlsx'
 
 # 사람 이름 목록
-names = ["천승범", "조예찬 John", "최재훈", "송의현", "이승준", "양수민", "신재욱", "이승헌", "진세", "서희찬", "신영진", "윤상민"]
+names = ["천승범", "조예찬 John", "최재훈", "이승준", "양수민", "신재욱", "서희찬", "신영진", "윤상민"]
 
 # 사람 이름과 시트 이름 매핑 (직접 설정)
 name_to_sheet = {
