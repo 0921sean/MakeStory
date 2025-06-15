@@ -6,25 +6,30 @@ from openpyxl.styles import Alignment
 
 # 파일 경로
 excel_path = './../KorA_Valley/KorA_Valley_tracking.xlsx'  # 수정
-output_path = './../KorA_Valley/KorA_Valley_tracking_06_08.xlsx'
+output_path = './../KorA_Valley/KorA_Valley_tracking_06_15.xlsx'
 
 # 사람 이름 목록
-names = ["천승범", "조예찬 John", "최재훈", "이승준", "양수민", "신재욱", "서희찬", "신영진", "윤상민"]
+names = ["천승범", "조예찬 John", "최재훈", "이승준", "신재욱", "서희찬", "신영진", "윤상민",
+         "최서연", "이연희", "홍학래", "Sujin", "김영준", "정성민", "김은지", "이채연"]
 
 # 사람 이름과 시트 이름 매핑 (직접 설정)
 name_to_sheet = {
     "천승범": "천승범",
     "조예찬 John": "조예찬",
     "최재훈": "최재훈",
-    "송의현": "송의현",
     "이승준": "이승준",
-    "양수민": "양수민",
     "신재욱": "신재욱",
-    "이승헌": "이승헌",
-    "진세": "김진세",  # '진세'는 '김진세' 시트에 기록
     "서희찬": "서희찬",
     "신영진": "신영진",
-    "윤상민": "윤상민"
+    "윤상민": "윤상민",
+    "최서연": "최서연",
+    "이연희": "이연희",
+    "홍학래": "홍학래",
+    "Sujin": "이수진",
+    "김영준": "김영준",
+    "정성민": "정성민",
+    "김은지": "김은지",
+    "이채연": "이채연"
 }
 
 # 엑셀 파일 읽기
@@ -84,7 +89,7 @@ for line in lines:
     col = name_idx + 3  # 열 인덱스 (3열부터 시작)
 
     # 계획 패턴 확인 - "번째 계획:" 형식만 처리
-    plan_match = re.search(r'(\d+)번[째쨰]?\s*(계획|목표)\s*:?\s*(.*)', content)
+    plan_match = re.search(r'(\d+)\s*번[째쨰]?\s*(계획|목표)\s*:?\s*(.*)', content)
     if plan_match and '✅' not in content:  # 완료 표시가 없는 경우만 계획으로 처리
         plan_number = int(plan_match.group(1))
         plan_content = plan_match.group(3).strip()
