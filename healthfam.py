@@ -61,7 +61,7 @@ def generate_workout_summary(workout_counts):
     
     return workout_text
 
-def generate_penalty_summary(penalties):
+def generate_penalty_summary(penalties, member_order):
     """
     벌금 정보를 그룹화하여 요약합니다.
     """
@@ -79,7 +79,7 @@ def generate_penalty_summary(penalties):
     
     for fine in [5000, 10000, 15000]:
         if penalty_groups[fine]:
-            names = penalty_groups[fine]
+            names = sorted(penalty_groups[fine], key=lambda name: member_order.index(name))
             if len(names) > 1:
                 penalty_text.append(f"{' '.join(names)} {fine}원씩")
             else:
@@ -180,7 +180,7 @@ def main():
         '이명건', 
         '이승준',
         '이형민',
-        # '전은결',
+        '전은결',
         '천승범',
         '황동근'
     ]
@@ -188,6 +188,9 @@ def main():
     for member in default_members:
         if member not in workout_counts:
             workout_counts[member] = 0
+            
+    # workout_counts에서 default_members만 남기기
+    workout_counts = {name: count for name, count in workout_counts.items() if name in default_members}
     
     # 벌금 계산
     penalties = calculate_penalties(workout_counts)
@@ -199,7 +202,7 @@ def main():
     print()
     
     # 벌금 요약 생성 및 출력
-    penalty_summary = generate_penalty_summary(penalties)
+    penalty_summary = generate_penalty_summary(penalties, default_members)
     print(penalty_summary)
     
     # 개인별 벌금 기록 업데이트
