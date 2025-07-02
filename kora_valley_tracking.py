@@ -5,8 +5,8 @@ from datetime import datetime
 from openpyxl.styles import Alignment
 
 # 파일 경로
-excel_path = './../KorA_Valley/KorA_Valley_tracking_06_22.xlsx'  # 수정
-output_path = './../KorA_Valley/KorA_Valley_tracking_06_29.xlsx'
+excel_path = './../KorA_Valley/KorA_Valley_tracking_06_29.xlsx'  # 수정
+output_path = './../KorA_Valley/KorA_Valley_tracking_07_02.xlsx'
 
 # 사람 이름 목록
 names = ["천승범", "조예찬 John", "최재훈", "신재욱", "서희찬", "신영진", "윤상민", "최서연",
