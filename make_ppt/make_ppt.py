@@ -7,10 +7,10 @@ from PIL import Image
 target_weeks = [4, 5, 6]
 
 # 이미지 폴더 경로
-base_folder = "ppt_pictures"
+base_folder = "make_ppt/ppt_pictures"
 
 # 저장할 최종 경로
-output_root = "고문상_강의안"
+output_root = "make_ppt/고문상_강의안"
 os.makedirs(output_root, exist_ok=True)
 
 # 슬라이드 크기: 16:9

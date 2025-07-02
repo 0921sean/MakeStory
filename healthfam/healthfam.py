@@ -153,17 +153,17 @@ def update_total_penalty(penalties):
 
 def main():
     """
-    메인 함수 - health_log.txt 파일에서 채팅 로그를 읽어오고 결과를 출력합니다.
+    메인 함수 - gym_log.txt 파일에서 채팅 로그를 읽어오고 결과를 출력합니다.
     """
     print("운동 추적 및 벌금 계산 프로그램을 시작합니다.")
     
-    # health_log.txt 파일에서 채팅 로그 읽어오기
+    # gym_log.txt 파일에서 채팅 로그 읽어오기
     try:
-        with open("health_log.txt", "r", encoding="utf-8") as file:
+        with open("healthfam/gym_log.txt", "r", encoding="utf-8") as file:
             chat_log = file.read()
-        print("health_log.txt 파일을 성공적으로 불러왔습니다.")
+        print("gym_log.txt 파일을 성공적으로 불러왔습니다.")
     except FileNotFoundError:
-        print("Error: health_log.txt 파일을 찾을 수 없습니다.")
+        print("Error: gym_log.txt 파일을 찾을 수 없습니다.")
         return
     except Exception as e:
         print(f"Error: 파일을 읽는 중 오류가 발생했습니다: {e}")

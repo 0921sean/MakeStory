@@ -53,7 +53,7 @@ for name, sheet_name in name_to_sheet.items():
         print(f"'{sheet_name}' 시트를 찾을 수 없습니다. 해당 사람의 계획 내용은 기록되지 않습니다: {name}")
 
 # 입력 텍스트 읽기
-with open('tracking.txt', 'r', encoding='utf-8') as f:
+with open('kora_valley/tracking.txt', 'r', encoding='utf-8') as f:
     tracking_list = f.read()
 
 current_date = None
