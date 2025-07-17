@@ -36,9 +36,8 @@ priority_order = [
     "BD Assignment", "JP Assignment", "Apple Assignment",
     "GTC Assignment", "GTC Work", "ZERO to AI 일", "개발블로그 작성", "글쓰기", "기록/정산 자동화",
     "플래너 제작", "친구글 읽기", "글 읽기", "LinkedIn 수정", "코라밸리 운영",
-    "코라밸리/헬스팸 운영", "플래너 작성", "Txx 사전과제", "인스타 제작", "BD Meeting",
-    "GQ Meeting", "Apple Meeting", "GTC Meeting", "BOTA 미팅", "ZERO to AI 미팅", "코라밸리 미팅", 
-    "코라밸리 커피챗", "커피챗", "토크"
+    "코라밸리/헬스팸 운영", "플래너 작성", "Txx 사전과제", "BD Meeting",
+    "GQ Meeting", "Apple Meeting", "GTC Meeting", "BOTA 미팅", "코라밸리 커피챗", "커피챗", "토크"
 ]
 
 def get_plan_priority(plan_name):
@@ -86,11 +85,6 @@ def generate_daily_planners(text_input):
         unique_plans = list(plan_dict.keys())
         unique_plans.sort(key=get_plan_priority)
         unique_plans += [""] * (12 - len(unique_plans))
-        
-        # 시간표 막대
-        colors = ["#FA7D7C", "#F9AE7D", "#F7FC7F", "#7DF97E", "#80E0FA",
-                  "#7D7DFA", "#CA7CFA", "#CD7D7E", "#C5967B", "#CDCD7D",
-                  "#7FCD7F", "#80BDCD"]
 
         # 체크리스트
         start_x, start_y, line_spacing, checkbox_x = 230, 285, 70, 162
@@ -102,23 +96,12 @@ def generate_daily_planners(text_input):
             checkbox = checked if plan else unchecked
             image.paste(checkbox, (checkbox_x, y + (plan_font.size // 2) - 20), mask=checkbox)
             if plan:
-                # ✅ 색상 지정 추가
-                color = colors[i % len(colors)]
-                
-                # 계획 텍스트 그리기
                 draw.text((start_x, y), plan, font=plan_font, fill="black")
 
-                # 텍스트 길이 기반 원형 색상 표시
-                text_width = draw.textlength(plan, font=plan_font)
-                circle_x = start_x + text_width + 30
-                circle_y = y + plan_font.size // 2
-                draw.ellipse(
-                    [circle_x - 10, circle_y - 10, circle_x + 10, circle_y + 10],
-                    fill=color,
-                    outline=None
-                )
-                # 원본
-                # draw.text((start_x, y), plan, font=plan_font, fill="black")
+        # 시간표 막대
+        colors = ["#FA7D7C", "#F9AE7D", "#F7FC7F", "#7DF97E", "#80E0FA",
+                  "#7D7DFA", "#CA7CFA", "#CD7D7E", "#C5967B", "#CDCD7D",
+                  "#7FCD7F", "#80BDCD"]
 
         def draw_rounded_block(x1, y1, x2, y2, color):
             r = (y2 - y1) / 2

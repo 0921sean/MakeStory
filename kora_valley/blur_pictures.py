@@ -1,8 +1,8 @@
 import cv2
 
 # 1. 이미지 파일 경로 지정
-input_path = 'kora_valley/input_image/plan_94.png'   # 사용자가 넣은 이미지 경로
-output_path = 'kora_valley/blurred_image/plan_94_blurred.png'  # 결과 저장 파일 이름
+input_path = 'kora_valley/input_image/plan_113.png'   # 사용자가 넣은 이미지 경로
+output_path = 'kora_valley/blurred_image/plan_113_blurred.png'  # 결과 저장 파일 이름
 
 # 2. 이미지 읽기
 image = cv2.imread(input_path)

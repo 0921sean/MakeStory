@@ -127,7 +127,7 @@ def update_total_penalty(penalties):
     """
     총 벌금 금액을 업데이트합니다.
     """
-    total_penalty_file = "total_penalty.txt"
+    total_penalty_file = "healthfam/total_penalty.txt"
     
     # 파일이 존재하는지 확인
     if os.path.exists(total_penalty_file):
