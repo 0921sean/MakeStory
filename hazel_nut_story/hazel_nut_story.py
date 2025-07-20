@@ -34,9 +34,9 @@ priority_order = [
     "고문상 공부", "전전101 채점", "독서", "헬스", "언어 공부", "유익한 영상",
     "CS 공부", "코테 공부", "게임QA 일", "Orak 코드 실행", "논문 리딩",
     "BD Assignment", "JP Assignment", "Apple Assignment",
-    "GTC Assignment", "GTC Work", "ZERO to AI 일", "개발블로그 작성", "글쓰기", "기록/정산 자동화",
-    "플래너 제작", "친구글 읽기", "글 읽기", "LinkedIn 수정", "코라밸리 운영",
-    "코라밸리/헬스팸 운영", "플래너 작성", "Txx 사전과제", "인스타 제작", "BD Meeting",
+    "GTC Assignment", "GTC Work", "GTC 일", "ZERO to AI 일", "개발블로그 작성", "글쓰기", "기록/정산 자동화",
+    "플래너 제작", "친구글 읽기", "글 읽기", "LinkedIn 수정", "코라밸리 일", "코라밸리 운영",
+    "코라밸리/헬스팸 운영", "지원서 작성", "플래너 작성", "Txx 사전과제", "인스타 제작", "BD Meeting",
     "GQ Meeting", "Apple Meeting", "GTC Meeting", "BOTA 미팅", "ZERO to AI 미팅", "코라밸리 미팅", 
     "코라밸리 커피챗", "커피챗", "토크"
 ]

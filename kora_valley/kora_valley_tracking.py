@@ -5,24 +5,24 @@ from datetime import datetime
 from openpyxl.styles import Alignment
 
 # 파일 경로
-excel_path = './../KorA_Valley/KorA_Valley_tracking_07_06.xlsx'  # 수정
-output_path = './../KorA_Valley/KorA_Valley_tracking_07_13.xlsx'
+excel_path = './../KorA_Valley/KorA_Valley_tracking_07_13.xlsx'  # 수정
+output_path = './../KorA_Valley/KorA_Valley_tracking_07_20.xlsx'
 
 # 사람 이름 목록
-names = ["천승범", "조예찬 John", "최재훈", "신재욱", "서희찬", "신영진", "윤상민", "최서연",
-         "이연희", "홍학래", "Sujin", "김영준", "정성민", "김은지", "이채연", "김진호", "hey", "지유경"]
+names = ["천승범", "비씩 20 조예찬형", "비씩 20 최재훈", "신재욱", "서희찬", "비씩 20 신영진", "윤상민", "최서연",
+         "이연희 Kirsten", "홍학래", "Sujin", "김영준", "정성민", "김은지", "이채연", "김진호", "hey", "지유경"]
 
 # 사람 이름과 시트 이름 매핑 (직접 설정)
 name_to_sheet = {
     "천승범": "천승범",
-    "조예찬 John": "조예찬",
-    "최재훈": "최재훈",
+    "비씩 20 조예찬형": "조예찬",
+    "비씩 20 최재훈": "최재훈",
     "신재욱": "신재욱",
     "서희찬": "서희찬",
-    "신영진": "신영진",
+    "비씩 20 신영진": "신영진",
     "윤상민": "윤상민",
     "최서연": "최서연",
-    "이연희": "이연희",
+    "이연희 Kirsten": "이연희",
     "홍학래": "홍학래",
     "Sujin": "이수진",
     "김영준": "김영준",
