@@ -1,0 +1,86 @@
+from datetime import datetime
+import re
+from collections import defaultdict
+
+data = """
+2025년 7월 28일 월요일
+오전 10:53 천승범 헬스 1010 1110
+오후 2:03 천승범 코테 공부 1340 1600
+오후 7:52 천승범 유익한 영상 1940 2000
+오후 10:00 천승범 퐅폴 제작 2000 2040
+오후 11:02 천승범 언어 공부 2200 2220
+2025년 7월 29일 화요일
+오전 8:01 천승범 헬스 630 730
+오후 12:17 천승범 유익한 영상 910 1150
+오후 9:20 천승범 ZERO to AI 1800 2000
+오후 9:20 천승범 언어 공부 2030 2050
+오후 9:20 천승범 Apple PBL 2300 2400
+2025년 7월 30일 수요일
+오전 9:00 천승범 헬스 800 900
+오후 12:18 천승범 코테 공부 1220 1710
+오후 10:00 천승범 언어 공부 2000 2020
+오후 9:58 천승범 Apple PBL 2100 2400
+2025년 7월 31일 목요일
+오전 9:30 천승범 헬스 920 1020
+오후 3:36 천승범 논문분석/스터디 1530 1700
+오후 3:36 천승범 논문 분석 1530 1700
+오전 12:37 천승범 언어 공부 2300 2320
+2025년 8월 1일 금요일
+오전 1:31 천승범 코드 작업 100 320
+오후 1:58 천승범 헬스 1300 1400
+오후 3:14 천승범 독서 1510 1540
+오후 4:41 천승범 독서 1640 1700
+오후 10:03 천승범 언어 공부 2130 2210
+오후 10:30 천승범 Apple Assignment 2220 2350
+2025년 8월 2일 토요일
+오전 5:16 천승범 유익한 영상 450 520
+오전 10:25 천승범 Apple Meeting 1000 1200
+오후 2:20 천승범 CODE ME 강연 1200 1420
+오후 2:54 천승범 Apple Assignment 940 1000
+오후 2:55 천승범 헬스 1440 1540
+오후 8:23 천승범 FBA Quant FE세션 2000 2030
+오후 11:11 천승범 논문 분석 2030 2050
+오후 11:12 천승범 독서 2310 2340
+오후 11:12 천승범 언어 공부 940 1000
+2025년 8월 3일 일요일
+오전 1:58 천승범 독서 150 210
+오전 2:09 천승범 인스타 제작 210 250
+오전 11:50 천승범 논문 분석 1140 1220
+오후 3:18 천승범 논문 분석 1240 1320
+오후 3:18 천승범 논문 분석 1510 1700
+오후 7:25 천승범 유익한 영상 1720 1830
+오후 7:25 천승범 글쓰기 1830 2000
+오후 8:00 천승범 언어 공부 2000 2010
+오후 9:44 천승범 논문 분석 2010 2150
+오전 12:25 천승범 FBA Quant 세션 2200 2300
+오전 12:25 천승범 코라밸리 미팅 2300 2400
+"""
+
+# Function to convert HHMM to minutes
+def to_minutes(hhmm):
+    s = str(hhmm).zfill(4)
+    h, m = int(s[:-2]), int(s[-2:])
+    return h * 60 + m
+
+total_minutes = 0
+date_pattern = re.compile(r"(\d{4})년\s+(\d{1,2})월\s+(\d{1,2})일")
+
+for line in data.splitlines():
+    line = line.strip()
+    if not line:
+        continue
+    if date_pattern.search(line):
+        continue
+    parts = line.split()
+    if len(parts) < 3:
+        continue
+    start_str, end_str = parts[-2], parts[-1]
+    if not (start_str.isdigit() and end_str.isdigit()):
+        continue
+    start_min = to_minutes(start_str)
+    end_min = to_minutes(end_str)
+    dur = end_min - start_min
+    if dur > 0:
+        total_minutes += dur
+
+print(total_minutes)

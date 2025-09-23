@@ -94,7 +94,7 @@ def update_penalty_records(penalties):
     """
     개인별 벌금 기록을 업데이트합니다.
     """
-    penalty_file = "penalty_list.txt"
+    penalty_file = "healthfam/penalty_list.txt"
     penalty_totals = {}
     
     # 파일이 존재하는지 확인
@@ -175,10 +175,12 @@ def main():
     # 기본 멤버 목록 (운동 기록이 없는 경우 기본값 0으로 설정)
     default_members = [
         '권정호',
+        '김세호',
         '성현우',
         '신동훈',
         '이명건', 
         '이승준',
+        '이준성',
         '이형민',
         '전은결',
         '천승범',

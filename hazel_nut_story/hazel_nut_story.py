@@ -29,16 +29,18 @@ def time_to_minutes(hour, minute):
 priority_order = [
     "게임QA 일", "물전 중간", "중문이 중간", "고문상 중간", "컴구 기말", "데구 기말",
     "물전 기말", "고문상 기말", "중문이 기말", "고문상 퀴즈", "컴구 수업",
-    "데구 수업", "데구 강의", "고문상 토론", "전전101 조교", "컴구 과제",
+    "데구 수업", "계량경제학 수업", "주채파 수업", "데구 강의", "고문상 토론", "전전101 조교", "컴구 과제",
     "중문이 과제", "컴구 공부", "데구 공부", "물전 공부", "중문이 공부",
     "고문상 공부", "전전101 채점", "독서", "헬스", "언어 공부", "유익한 영상",
-    "CS 공부", "코테 공부", "게임QA 일", "Orak 코드 실행", "논문 리딩",
+    "CS 공부", "운영체제론 공부", "코테 공부", "SpringBoot 공부", "JPA 공부", "리액티브 공부", "SURI 공부", "SURI 과제", "퀀트 공부", 
+    "논문 리딩", "논문 분석", "BOTA 질문답변",
     "BD Assignment", "JP Assignment", "Apple Assignment",
-    "GTC Assignment", "GTC Work", "GTC 일", "ZERO to AI 일", "개발블로그 작성", "글쓰기", "기록/정산 자동화",
-    "플래너 제작", "친구글 읽기", "글 읽기", "LinkedIn 수정", "코라밸리 일", "코라밸리 운영",
-    "코라밸리/헬스팸 운영", "지원서 작성", "플래너 작성", "Txx 사전과제", "인스타 제작", "BD Meeting",
-    "GQ Meeting", "Apple Meeting", "GTC Meeting", "BOTA 미팅", "ZERO to AI 미팅", "코라밸리 미팅", 
-    "코라밸리 커피챗", "커피챗", "토크"
+    "GTC Assignment", "GTC Work", "GTC 일", "ZERO to AI 일", "TOEIC 공부", "개발블로그 작성", "글쓰기", "기록/정산 자동화",
+    "플래너 제작", "코딩 작업", "친구글 읽기", "글 읽기", "LinkedIn 수정", "코라밸리 일", "퐅폴 제작", "코라밸리 운영",
+    "코라밸리/헬스팸 운영", "지원서 작성", "플래너 작성", "T사 사전과제", "주식 공부", "인스타 제작",
+    "GDGoC T19 세션", "GDGoC 세션", "SURI 세션",
+    "BD Meeting", "GQ Meeting", "Apple Meeting", "GTC Meeting", "FBA Quant FE세션", "FBA Quant AP세션", "BOTA 미팅",
+    "ZERO to AI 미팅", "코라밸리 미팅", "코라밸리 커피챗", "커피챗", "토크"
 ]
 
 def get_plan_priority(plan_name):
@@ -117,8 +119,6 @@ def generate_daily_planners(text_input):
                     fill=color,
                     outline=None
                 )
-                # 원본
-                # draw.text((start_x, y), plan, font=plan_font, fill="black")
 
         def draw_rounded_block(x1, y1, x2, y2, color):
             r = (y2 - y1) / 2

@@ -5,12 +5,12 @@ from datetime import datetime
 from openpyxl.styles import Alignment
 
 # 파일 경로
-excel_path = './../KorA_Valley/KorA_Valley_tracking_07_13.xlsx'  # 수정
-output_path = './../KorA_Valley/KorA_Valley_tracking_07_20.xlsx'
+excel_path = './../KorA_Valley/KorA_Valley_tracking_09_14.xlsx'  # 수정
+output_path = './../KorA_Valley/KorA_Valley_tracking_09_21.xlsx'
 
 # 사람 이름 목록
 names = ["천승범", "비씩 20 조예찬형", "비씩 20 최재훈", "신재욱", "서희찬", "비씩 20 신영진", "윤상민", "최서연",
-         "이연희 Kirsten", "홍학래", "Sujin", "김영준", "정성민", "김은지", "이채연", "김진호", "hey", "지유경"]
+         "이연희 Kirsten", "홍학래", "김영준", "정성민", "김은지", "김진호", "지유경"]
 
 # 사람 이름과 시트 이름 매핑 (직접 설정)
 name_to_sheet = {
@@ -24,13 +24,10 @@ name_to_sheet = {
     "최서연": "최서연",
     "이연희 Kirsten": "이연희",
     "홍학래": "홍학래",
-    "Sujin": "이수진",
     "김영준": "김영준",
     "정성민": "정성민",
     "김은지": "김은지",
-    "이채연": "이채연",
     "김진호": "김진호",
-    "hey": "홍은영",
     "지유경": "지유경"
 }
 
@@ -112,7 +109,7 @@ for line in lines:
 
     # 완료 처리
     if '✅' in content or '✅️' in content:
-        completion_match = re.search(r'(?:✅️?\s*)?(\d+)번[째쨰]?\s*(계획|목표)\s*완료', content)
+        completion_match = re.search(r'(?:✅️?\s*)?(\d+)번[째쨰]?\s*(계획|목표)\s*(완료|왕료)', content)
         if completion_match:
             plan_number = int(completion_match.group(1))
             row = plan_number + 2
