@@ -1,30 +1,24 @@
-from openpyxl import load_workbook
+"""
+KorA Valley DB 시트 초기 생성
+
+기존 엑셀의 계획 시트 + 개인 시트 데이터를 기반으로
+DB 시트를 새로 생성합니다.
+"""
+
+import os
+import sys
 from datetime import datetime
 
-excel_path = './../KorA_Valley/KorA_Valley_tracking_2026_02_08.xlsx'
-output_path = './../KorA_Valley/KorA_Valley_tracking_2026_02_08_with_DB.xlsx'
+from openpyxl import load_workbook
 
-name_to_sheet = {
-    "천승범": "천승범",
-    "비씩 20 조예찬형": "조예찬",
-    "신재욱": "신재욱",
-    "서희찬": "서희찬",
-    "윤상민": "윤상민",
-    "최서연": "최서연",
-    "이연희 Kirsten": "이연희",
-    "김영준": "김영준",
-    "정성민": "정성민",
-    "김진호": "김진호",
-    "유재호님": "유재호",
-    "황서호형": "황서호",
-    "박상준님": "박상준",
-    "홍석채님": "홍석채",
-    "전상우님": "전상우",
-    "김세현님": "김세현",
-    "비씩 20 배경덕": "배경덕"
-}
+# 공통 모듈 import
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from common.config import KORA_NAME_MAP
 
-names = list(name_to_sheet.values())
+excel_path = "./../KorA_Valley/KorA_Valley_tracking_2026_02_08.xlsx"
+output_path = "./../KorA_Valley/KorA_Valley_tracking_2026_02_08_with_DB.xlsx"
+
+names = list(KORA_NAME_MAP.values())
 
 wb = load_workbook(excel_path)
 
@@ -42,8 +36,9 @@ plan_sheet = wb["계획"]
 current_id = 1
 db_row = 2
 
-def write_standard_date(sheet, row, col, value):
 
+def write_standard_date(sheet, row, col, value):
+    """다양한 형식의 날짜 문자열을 yyyy.mm.dd 형식으로 통일하여 기록합니다."""
     if not value:
         sheet.cell(row=row, column=col, value=None)
         return
@@ -60,7 +55,7 @@ def write_standard_date(sheet, row, col, value):
             day = int(parts[1])
             year = datetime.now().year
             dt = datetime(year, month, day)
-        except:
+        except Exception:
             sheet.cell(row=row, column=col, value=value)
             return
 
@@ -68,35 +63,32 @@ def write_standard_date(sheet, row, col, value):
     elif isinstance(value, str) and "." in value:
         try:
             dt = datetime.strptime(value, "%Y.%m.%d")
-        except:
+        except ValueError:
             try:
                 dt = datetime.strptime(value, "%Y.%m.%d.")
-            except:
+            except ValueError:
                 sheet.cell(row=row, column=col, value=value)
                 return
     else:
         sheet.cell(row=row, column=col, value=value)
         return
 
-    # 저장 + 형식 통일
     sheet.cell(row=row, column=col, value=dt)
     sheet.cell(row=row, column=col).number_format = "yyyy.mm.dd"
+
 
 # -------------------------
 # DB 생성
 # -------------------------
 for name_idx, name in enumerate(names):
-
     person_sheet_name = name
     if person_sheet_name not in wb.sheetnames:
         continue
 
     person_sheet = wb[person_sheet_name]
-
-    plan_col = name_idx + 3  # 계획 시트에서 해당 사람 열
+    plan_col = name_idx + 3
 
     for row in range(3, plan_sheet.max_row + 1):
-
         plan_number = plan_sheet.cell(row=row, column=2).value
         status_cell = plan_sheet.cell(row=row, column=plan_col).value
 

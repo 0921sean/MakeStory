@@ -1,6 +1,13 @@
-from datetime import datetime
+"""
+특정 기간의 총 집중 시간(분) 계산 테스트 스크립트
+"""
+
+import os
 import re
-from collections import defaultdict
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from common.time_utils import to_minutes
 
 data = """
 2025년 7월 28일 월요일
@@ -56,20 +63,12 @@ data = """
 오전 12:25 천승범 코라밸리 미팅 2300 2400
 """
 
-# Function to convert HHMM to minutes
-def to_minutes(hhmm):
-    s = str(hhmm).zfill(4)
-    h, m = int(s[:-2]), int(s[-2:])
-    return h * 60 + m
-
-total_minutes = 0
 date_pattern = re.compile(r"(\d{4})년\s+(\d{1,2})월\s+(\d{1,2})일")
 
+total_minutes = 0
 for line in data.splitlines():
     line = line.strip()
-    if not line:
-        continue
-    if date_pattern.search(line):
+    if not line or date_pattern.search(line):
         continue
     parts = line.split()
     if len(parts) < 3:
@@ -77,9 +76,7 @@ for line in data.splitlines():
     start_str, end_str = parts[-2], parts[-1]
     if not (start_str.isdigit() and end_str.isdigit()):
         continue
-    start_min = to_minutes(start_str)
-    end_min = to_minutes(end_str)
-    dur = end_min - start_min
+    dur = to_minutes(end_str) - to_minutes(start_str)
     if dur > 0:
         total_minutes += dur
 

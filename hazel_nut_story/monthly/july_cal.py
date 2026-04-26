@@ -1,23 +1,23 @@
-# -*- coding: utf-8 -*-
-# july.txt로부터 최근 4개 ISO 주(월~일 기준) 총 집중 시간(분)을 계산해 리스트로 출력
+"""
+주차별 총 집중 시간 계산
 
+july.txt 로부터 특정 월의 ISO 주(월~일) 단위 총 집중 시간(분)을 계산합니다.
+"""
+
+import os
 import re
+import sys
+from collections import defaultdict
 from datetime import datetime
-from collections import defaultdict, OrderedDict
 from pathlib import Path
 
-# JULY_FILE = "july.txt"  # 파일 경로만 맞춰주면 됨
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from common.time_utils import to_minutes
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 date_pat = re.compile(r"(\d{4})년\s+(\d{1,2})월\s+(\d{1,2})일")
 
-def to_minutes(hhmm: str) -> int:
-    """'HMM', 'HHMM', '2400' 같은 문자열을 분으로 변환"""
-    s = hhmm.strip()
-    if not s.isdigit():
-        return 0
-    s = s.zfill(4)
-    h, m = int(s[:-2]), int(s[-2:])
-    return h * 60 + m
 
 def weekly_minutes_from_file(path: Path, target_year: int = 2025, target_month: int = 7):
     """
@@ -42,7 +42,6 @@ def weekly_minutes_from_file(path: Path, target_year: int = 2025, target_month: 
             except ValueError:
                 current_date = None
             else:
-                # 지정한 달만 포함
                 current_date = dt if (dt.year == target_year and dt.month == target_month) else None
             continue
 
@@ -60,27 +59,25 @@ def weekly_minutes_from_file(path: Path, target_year: int = 2025, target_month: 
         end_min = to_minutes(end_str)
         dur = end_min - start_min
         if dur <= 0:
-            continue  # 이상치 무시
+            continue
 
         iso_year, iso_week, _ = current_date.isocalendar()
         week_key = (iso_year, iso_week)
         week_minutes[week_key] += dur
 
     # (연, 주) 정렬 후 최근 4개 반환
-    sorted_weeks = sorted(week_minutes.items())  # 오래된 -> 최신
+    sorted_weeks = sorted(week_minutes.items())
     last4 = sorted_weeks[-4:] if len(sorted_weeks) >= 4 else sorted_weeks
 
-    # 보기 좋은 라벨과 함께 출력용 데이터 구성
     labels = [f"{y}-W{w}" for (y, w), _ in last4]
     minutes = [mins for _, mins in last4]
     return labels, minutes
 
-if __name__ == "__main__":
-    labels, minutes = weekly_minutes_from_file(Path("hazel_nut_story/july.txt"), target_year=2025, target_month=7)
 
-    # 결과 출력
+if __name__ == "__main__":
+    july_path = Path(os.path.join(BASE_DIR, "july.txt"))
+    labels, minutes = weekly_minutes_from_file(july_path, target_year=2025, target_month=7)
+
     print("주차 라벨:", labels)
     print("각 주 총 집중 시간(분):", minutes)
-
-    # 트렌드 그래프에 바로 붙여넣기 쉬운 한 줄
     print("last4_weeks_minutes =", minutes)
