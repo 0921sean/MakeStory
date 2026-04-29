@@ -28,8 +28,8 @@ from common.config import KORA_NAME_MAP
 # =============================
 # 경로 설정
 # =============================
-excel_path = "./../KorA_Valley/KorA_Valley_tracking_2026_04_19_DB.xlsx"
-output_path = "./../KorA_Valley/KorA_Valley_tracking_2026_04_26_DB.xlsx"
+excel_path = "./../KorA_Valley/KorA_Valley_tracking_2026_04_26_DB.xlsx"
+output_path = "./../KorA_Valley/KorA_Valley_tracking_2026_04_29_DB.xlsx"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TRACKING_FILE = os.path.join(BASE_DIR, "tracking.txt")
@@ -56,12 +56,22 @@ BLACK_FONT = Font(color="FF000000")
 RED_CENTER = Font(color="FFFF0000")
 CENTER = Alignment(horizontal="center")
 RIGHT = Alignment(horizontal="right")
+LEFT = Alignment(horizontal="left")
 
 THIN_BORDER = Border(
     left=Side(style="thin"),
     right=Side(style="thin"),
     top=Side(style="thin"),
     bottom=Side(style="thin"),
+)
+
+DIAGONAL_BORDER = Border(
+    left=Side(style="thin"),
+    right=Side(style="thin"),
+    top=Side(style="thin"),
+    bottom=Side(style="thin"),
+    diagonalDown=True,
+    diagonal=Side(style="thin")
 )
 
 # =============================
@@ -89,14 +99,14 @@ for i, name in enumerate(SHEET_NAMES):
         print(f"[{name}] 개인 시트를 맨 뒤에 생성하고 초기화합니다.")
         new_sheet = wb.create_sheet(title=name)
         
-        # B2: 날짜, C2: 이름
-        date_cell2 = new_sheet.cell(2, 2, plan_sheet.cell(1, col).value)
-        date_cell2.alignment = CENTER
-        date_cell2.border = THIN_BORDER
+        # B2: 대각선 테두리 (빈 셀)
+        b2_cell = new_sheet.cell(2, 2)
+        b2_cell.border = DIAGONAL_BORDER
         
-        name_cell2 = new_sheet.cell(2, 3, name)
-        name_cell2.alignment = CENTER
-        name_cell2.border = THIN_BORDER
+        # C2: '계획' (왼쪽 정렬)
+        c2_cell = new_sheet.cell(2, 3, "계획")
+        c2_cell.alignment = LEFT
+        c2_cell.border = THIN_BORDER
 
 person_sheets = {
     name: wb[name]
