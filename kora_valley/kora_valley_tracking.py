@@ -28,8 +28,8 @@ from common.config import KORA_NAME_MAP
 # =============================
 # 경로 설정
 # =============================
-excel_path = "./../KorA_Valley/KorA_Valley_tracking_2026_04_26_DB.xlsx"
-output_path = "./../KorA_Valley/KorA_Valley_tracking_2026_04_29_DB.xlsx"
+excel_path = "./../KorA_Valley/KorA_Valley_tracking_2026_05_03_DB.xlsx"
+output_path = "./../KorA_Valley/KorA_Valley_tracking_2026_05_06_DB.xlsx"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TRACKING_FILE = os.path.join(BASE_DIR, "tracking.txt")

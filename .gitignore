@@ -30,3 +30,5 @@ myvenv/
 # ==========================
 .DS_Store
 Thumbs.db
+.gstack/
+Support/
