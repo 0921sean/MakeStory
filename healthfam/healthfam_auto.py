@@ -164,9 +164,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true", help="계산 결과만 출력")
     parser.add_argument("--to-self", action="store_true", help="나와의 채팅으로 전송하고 기록은 갱신하지 않음")
+    parser.add_argument("--week", help="테스트용: 정산 상태와 무관하게 이 주(월요일, YYYY-MM-DD)를 계산. --dry-run/--to-self 전용")
     args = parser.parse_args()
 
-    weeks = pending_weeks(datetime.date.today())
+    if args.week:
+        if not (args.dry_run or args.to_self):
+            parser.error("--week 는 --dry-run 또는 --to-self 와 함께만 쓸 수 있습니다")
+        weeks = [monday_of(datetime.date.fromisoformat(args.week))]
+    else:
+        weeks = pending_weeks(datetime.date.today())
     if not weeks:
         return
 
