@@ -18,8 +18,6 @@ MakeStory/
 │   └── monthly/
 │       ├── month_record.py    # 월간 인스타 스토리 생성
 │       └── july_cal.py        # 주차별 집중 시간 계산
-├── healthfam/                 # 운동 벌금 추적
-│   └── healthfam.py           # 운동 횟수 파싱 → 벌금 계산
 ├── kora_valley/               # KorA Valley 목표 트래킹
 │   ├── kora_valley_tracking.py # 계획/완료 → 엑셀 자동 업데이트
 │   ├── create_db.py           # DB 시트 초기 생성
@@ -48,11 +46,7 @@ python hazel_nut_story/month_record.py july.txt
 
 ### 💪 healthfam — 운동 벌금 추적
 
-카톡 채팅 로그에서 **주 3회 운동 여부**를 추적하고 벌금을 자동 계산합니다.
-
-```bash
-python healthfam/healthfam.py
-```
+[Healthfam 저장소](https://github.com/0921sean/Healthfam)의 `kakao-settle/` 폴더로 옮겼습니다.
 
 ### 📊 kora_valley — KorA Valley 목표 트래킹
 
