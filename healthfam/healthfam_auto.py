@@ -8,7 +8,9 @@
     python3 healthfam_auto.py --to-self   # 나와의 채팅으로 전송 (기록 없음)
     python3 healthfam_auto.py             # 헬스팸 방에 전송하고 벌금 기록 갱신
 
-읽기: kakaocli (로컬 DB 조회) / 전송: kmsg (카카오톡 화면 자동화)
+읽기: 예약 작업 com.makestory.healthfam.dump 가 kakaocli로 방의 메시지를 파일로 뽑고, 이 스크립트는 그 파일만 읽습니다.
+      (macOS가 카카오톡 DB 접근 권한을 kakaocli에만 인정하기 때문에 Python이 kakaocli를 직접 부르면 허용 창이 뜹니다.)
+전송: kmsg-safe (카카오톡 화면 자동화)
 """
 
 import argparse
@@ -36,10 +38,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(BASE_DIR, "last_settled_week.txt")  # 마지막으로 정산한 주의 월요일 (YYYY-MM-DD)
 LOG_FILE = os.path.join(BASE_DIR, "auto_settle.log")
 
-KAKAOCLI = os.path.expanduser("~/.local/bin/kakaocli")
+DUMP_JOB = "com.makestory.healthfam.dump"
+DUMP_FILE = os.path.expanduser("~/.kakaocli/healthfam_dump.json")
 KMSG = os.path.expanduser("~/.local/bin/kmsg-safe")  # 여러 줄 메시지를 쪼개 보내지 않도록 고친 kmsg
 
-DB_CHAT_ID = 375704568186036  # 헬스팸 방 (카카오톡 DB의 chatId)
 KMSG_ROOM = "chat_8d04051528a9"  # 헬스팸 방 (kmsg chat_id)
 KMSG_SELF = "chat_b34bc169f9ec"  # 나와의 채팅 (kmsg chat_id)
 
@@ -54,11 +56,29 @@ def log(msg):
         f.write(line + "\n")
 
 
-def query(sql):
-    result = subprocess.run([KAKAOCLI, "query", sql], capture_output=True, text=True, timeout=60)
+def load_dump():
+    """추출 작업을 실행하고 결과를 읽는다. (방의 최신 logId, logId순 메시지 목록) 반환.
+
+    메시지 한 건: (logId, prevId, sentAt, type, 작성자 이름, 내용)
+    """
+    with open(DUMP_FILE, "w"):
+        pass  # launchd는 출력 파일에 이어 쓰므로 먼저 비운다
+    target = f"gui/{os.getuid()}/{DUMP_JOB}"
+    result = subprocess.run(["launchctl", "kickstart", target], capture_output=True, text=True)
     if result.returncode != 0:
-        raise RuntimeError(f"kakaocli 조회 실패: {result.stderr.strip()[:300]}")
-    return json.loads(result.stdout)
+        raise RuntimeError(f"추출 작업 실행 실패: {result.stderr.strip()[:200]}")
+    deadline = time.time() + 30
+    while time.time() < deadline:
+        time.sleep(0.5)
+        try:
+            with open(DUMP_FILE, encoding="utf-8") as f:
+                rows = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            continue
+        room_last = next((r[1] for r in rows if r[0] == "room"), None)
+        messages = sorted((tuple(r[1:]) for r in rows if r[0] == "msg"), key=lambda m: m[0])
+        return room_last, messages
+    raise RuntimeError("추출 결과를 30초 안에 받지 못함 (kakaocli의 전체 디스크 접근 권한 확인 필요)")
 
 
 def monday_of(day):
@@ -77,40 +97,37 @@ def pending_weeks(today):
     return weeks
 
 
-def check_db_complete(week_start_ts):
-    """해당 주 시작부터 지금까지 방의 메시지가 DB에 빠짐없이 있는지 확인."""
-    rows = query(
-        f"SELECT logId, prevId FROM NTChatMessage WHERE chatId={DB_CHAT_ID} "
-        f"AND sentAt>={week_start_ts - 14 * 86400} ORDER BY logId"
-    )
-    if not rows:
+def week_bounds(week):
+    start = int(datetime.datetime.combine(week, datetime.time()).timestamp())
+    end = int(datetime.datetime.combine(week + datetime.timedelta(days=7), datetime.time()).timestamp())
+    return start, end
+
+
+def check_db_complete(room_last, messages, week):
+    """해당 주 시작 2주 전부터 지금까지 방의 메시지가 빠짐없이 있는지 확인."""
+    start, _ = week_bounds(week)
+    recent = [m for m in messages if m[2] >= start - 14 * 86400]
+    if not recent:
         return "해당 기간 메시지가 DB에 하나도 없음"
-    ids = {r[0] for r in rows}
-    breaks = [r for r in rows if r[1] not in ids]
+    ids = {m[0] for m in recent}
+    breaks = [m for m in recent if m[1] not in ids]
     if len(breaks) > 1:  # 가장 오래된 메시지 하나만 앞이 끊겨 있어야 정상
         return f"메시지 연결이 {len(breaks) - 1}군데 끊겨 있음 (동기화 안 된 구간)"
-    room = query(f"SELECT lastLogId FROM NTChatRoom WHERE chatId={DB_CHAT_ID}")
-    if room and room[0][0] != rows[-1][0]:
+    if room_last is not None and room_last != recent[-1][0]:
         return "방의 최신 메시지가 아직 DB에 없음"
     return None
 
 
-def count_week(week):
+def count_week(messages, week):
     """한 주(월 00:00 ~ 다음 월 00:00)의 멤버별 운동 횟수. 멤버가 마지막으로 올린 N/3의 N."""
-    start = int(datetime.datetime.combine(week, datetime.time()).timestamp())
-    end = int(datetime.datetime.combine(week + datetime.timedelta(days=7), datetime.time()).timestamp())
-    rows = query(
-        "SELECT COALESCE(NULLIF(u.nickName,''), u.friendNickName, ''), m.message "
-        "FROM NTChatMessage m LEFT JOIN NTUser u ON u.userId=m.authorId AND u.linkId=0 "
-        f"WHERE m.chatId={DB_CHAT_ID} AND m.sentAt>={start} AND m.sentAt<{end} "
-        f"AND m.type IN ({','.join(map(str, TEXT_TYPES))}) ORDER BY m.sentAt, m.logId"
-    )
+    start, end = week_bounds(week)
+    in_week = sorted((m for m in messages if start <= m[2] < end and m[3] in TEXT_TYPES), key=lambda m: (m[2], m[0]))
     counts = {member: 0 for member in HEALTHFAM_MEMBERS}
-    for name, message in rows:
+    for _, _, _, _, name, message in in_week:
         match = COUNT_PATTERN.match(message or "")
         if match and name in counts:
             counts[name] = int(match.group(1))
-    return counts, len(rows)
+    return counts, len(in_week)
 
 
 def build_message(counts, total_penalty):
@@ -137,14 +154,10 @@ def send(chat_id, text):
         raise RuntimeError(f"kmsg 전송 실패: {output[-300:]}")
 
 
-def already_posted(text, week):
+def already_posted(messages, text, week):
     """같은 정산 메시지가 그 주가 끝난 뒤 방에 이미 올라와 있는지 (전송은 됐는데 실패로 보고된 경우 대비)."""
-    week_end = int(datetime.datetime.combine(week + datetime.timedelta(days=7), datetime.time()).timestamp())
-    rows = query(
-        f"SELECT message FROM NTChatMessage WHERE chatId={DB_CHAT_ID} AND sentAt>={week_end} "
-        "AND message LIKE '%총금액%'"
-    )
-    return any((row[0] or "").strip() == text.strip() for row in rows)
+    _, end = week_bounds(week)
+    return any(m[2] >= end and (m[5] or "").strip() == text.strip() for m in messages)
 
 
 def main():
@@ -157,20 +170,21 @@ def main():
     if not weeks:
         return
 
-    week_ts = int(datetime.datetime.combine(weeks[0], datetime.time()).timestamp())
-    problem = check_db_complete(week_ts)
+    room_last, messages = load_dump()
+    problem = check_db_complete(room_last, messages, weeks[0])
     if problem and not args.dry_run:
         # 방을 한 번 열어 카카오톡이 밀린 메시지를 받아오게 한 뒤 다시 확인
         subprocess.run([KMSG, "read", "--chat-id", KMSG_ROOM, "--limit", "5"], capture_output=True, timeout=120)
         time.sleep(10)
-        problem = check_db_complete(week_ts)
+        room_last, messages = load_dump()
+        problem = check_db_complete(room_last, messages, weeks[0])
     if problem:
         log(f"중단: {problem}. 다음 실행 때 다시 시도합니다.")
         sys.exit(1)
 
     total = read_total()
     for week in weeks:
-        counts, message_count = count_week(week)
+        counts, message_count = count_week(messages, week)
         text, penalties = build_message(counts, total)
         label = f"{week:%m.%d}~{week + datetime.timedelta(days=6):%m.%d} 주차"
         if args.dry_run:
@@ -182,7 +196,7 @@ def main():
             log(f"{label} 나와의 채팅으로 테스트 전송")
             total += sum(penalties.values())
             continue
-        if already_posted(text, week):
+        if already_posted(messages, text, week):
             log(f"{label} 정산 메시지가 이미 방에 있어 전송은 건너뜀")
         else:
             send(KMSG_ROOM, text)
